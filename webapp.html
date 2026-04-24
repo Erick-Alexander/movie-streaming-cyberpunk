@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER-NETFLIX // ALCYB_OS</title>
+    <style>
+        :root {
+            --cp-yellow: #fcee0a;
+            --cp-black: #000000;
+            --cp-dark-gray: #0d0d0d;
+            --cp-gray: #202020;
+            --cp-text-gray: #808080;
+            --cp-font: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
+        }
+
+        body {
+            background-color: var(--cp-black);
+            color: var(--cp-yellow);
+            font-family: var(--cp-font);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "ALCYB";
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 15vw;
+            color: rgba(252, 238, 10, 0.03);
+            z-index: -1;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        h1 {
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px var(--cp-yellow);
+            border-bottom: 2px solid var(--cp-yellow);
+            padding-bottom: 10px;
+            width: 80%;
+            margin-top: 30px;
+            position: relative;
+        }
+
+        #video-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            width: 95%;
+            max-width: 900px;
+            margin-top: 20px;
+            padding-bottom: 100px;
+
+        .video-card {
+            background-color: var(--cp-dark-gray);
+            border: 1px solid var(--cp-yellow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 6px 6px 0px var(--cp-yellow);
+            transition: all 0.3s ease;
+        }
+
+        .video-card:hover {
+            box-shadow: 0 0 20px var(--cp-yellow);
+            transform: translateY(-5px);
+        }
+
+        .video-card-header {
+            background-color: var(--cp-gray);
+            border-bottom: 1px solid var(--cp-yellow);
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .video-title {
+            margin: 0;
+            font-size: 1.3em;
+            text-transform: uppercase;
+        }
+
+        .video-id {
+            background-color: var(--cp-yellow);
+            color: var(--cp-black);
+            padding: 2px 8px;
+            font-size: 0.8em;
+            font-weight: bold;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+        }
+
+        video {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: black;
+            border-bottom: 1px solid var(--cp-yellow);
+        }
+
+        .video-info-section {
+            padding: 15px;
+            background: linear-gradient(180deg, var(--cp-dark-gray) 0%, #000 100%);
+        }
+
+        .video-description {
+            color: var(--cp-text-gray);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 1em;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: var(--cp-yellow);
+            color: var(--cp-black);
+            text-align: right;
+            padding: 5px 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            box-sizing: border-box;
+            box-shadow: 0 -5px 15px rgba(252, 238, 10, 0.4);
+            z-index: 100;
+        }
+
+        .footer-tag {
+            letter-spacing: 2px;
+        }
+
+    </style>
+</head>
+<body>
+
+<h1>CYBER-CATALOG // AUTH_USER: ALCYB</h1>
+
+<div id="video-container"></div>
+
+<footer>
+    <span class="footer-tag">DEVELOPED_BY // ALCYB</span>
+</footer>
+
+<script>
+    const CATALOG_URL = 'http://localhost:8081/movie-info/list';
+    const container = document.getElementById('video-container');
+
+    async function fetchVideos() {
+        try {
+            const response = await fetch(CATALOG_URL);
+            const videos = await response.json();
+            renderVideos(videos);
+        } catch (error) {
+            container.innerHTML = `<p style="color: red; text-align: center;">CRITICAL_ERROR: [DATA_LINK_BROKEN]</p>`;
+        }
+    }
+
+    function renderVideos(videos) {
+        container.innerHTML = '';
+        videos.forEach(video => {
+            const card = document.createElement('div');
+            card.className = 'video-card';
+
+            card.innerHTML = `
+                    <div class="video-card-header">
+                        <h2 class="video-title">${video.name}</h2>
+                        <span class="video-id">V-ID: ${video.id}</span>
+                    </div>
+                    <video controls crossorigin="anonymous">
+                        <source src="http://localhost:8081/stream/with-id/${video.id}" type="video/mp4">
+                        SYSTEM_ERROR: Video format not supported.
+                    </video>
+                    <div class="video-info-section">
+                        <p class="video-description">${video.description}</p>
+                    </div>
+                    <div style="height: 4px; background: var(--cp-yellow); opacity: 0.3;"></div>
+                `;
+            container.appendChild(card);
+        });
+    }
+
+    fetchVideos();
+</script>
+</body>
+</html>
